@@ -17,6 +17,9 @@ def parse_ranges(text: str, merge: bool = False) -> List[Tuple[int, int]]:
         try:
             if '/' in m:
                 net = ipaddress.ip_network(m, strict=False)
+                #Skip default route or overly broad networks. prefixlen is an attribute of the ipaddress.IPv4Network and ipaddress.IPv6Network objects
+                if net.prefixlen < 8:
+                    continue
                 start = int(net.network_address)
                 end = int(net.broadcast_address)
             else:
